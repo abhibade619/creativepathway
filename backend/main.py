@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base, SessionLocal
-from routes import artists, matching, roadmap
-from models import Artist
+from .database import engine, Base, SessionLocal
+from .routes import artists, matching, roadmap
+from .models import Artist, CareerEvent
 import os
 
 # Create database tables
@@ -24,10 +24,10 @@ async def startup_event():
         if artist_count == 0:
             print("🌱 Database is empty, seeding with all artists...")
             # First seed the initial 5 artists
-            from seed_data import seed_database
+            from .seed_data import seed_database
             seed_database()
             # Then expand with 40+ more artists
-            from expand_database import expand_database
+            from .expand_database import expand_database
             expand_database()
             final_count = db.query(Artist).count()
             event_count = db.query(CareerEvent).count()
