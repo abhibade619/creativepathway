@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from database import engine, Base
+from database import engine, Base, SessionLocal
 from routes import artists, matching, roadmap
+from models import Artist
+import os
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -12,10 +14,44 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configure CORS
+# Startup event to seed database if empty
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database with seed data if empty"""
+    db = SessionLocal()
+    try:
+        artist_count = db.query(Artist).count()
+        if artist_count == 0:
+            print("🌱 Database is empty, seeding with initial data...")
+            from seed_data import seed_database
+            seed_database()
+            print("✅ Database seeded successfully!")
+        else:
+            print(f"✅ Database already has {artist_count} artists")
+    except Exception as e:
+        print(f"⚠️ Error during database initialization: {e}")
+    finally:
+        db.close()
+
+# Configure CORS - allow production domain
+allowed_origins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+]
+
+# Add production domain from environment variable if available
+cors_origins_env = os.getenv("BACKEND_CORS_ORIGINS")
+if cors_origins_env:
+    import json
+    try:
+        prod_origins = json.loads(cors_origins_env)
+        allowed_origins.extend(prod_origins)
+    except:
+        pass
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174"],  # Vite dev server
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
