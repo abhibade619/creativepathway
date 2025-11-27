@@ -23,20 +23,21 @@ async def startup_event():
         artist_count = db.query(Artist).count()
         if artist_count == 0:
             print("🌱 Database is empty, seeding with all artists...")
-            # Import comprehensive seed function
-            from seed_all import seed_all_artists
-            seed_all_artists()
-            print("✅ Database seeded with 50+ artists!")
+            # First seed the initial 5 artists
+            from seed_data import seed_database
+            seed_database()
+            # Then expand with 40+ more artists
+            from expand_database import expand_database
+            expand_database()
+            final_count = db.query(Artist).count()
+            event_count = db.query(CareerEvent).count()
+            print(f"✅ Database seeded with {final_count} artists and {event_count} events!")
         else:
             print(f"✅ Database already has {artist_count} artists")
     except Exception as e:
         print(f"⚠️ Error during database initialization: {e}")
-        # Fallback to basic seed if comprehensive seed fails
-        try:
-            from seed_data import seed_database
-            seed_database()
-        except:
-            pass
+        import traceback
+        traceback.print_exc()
     finally:
         db.close()
 
