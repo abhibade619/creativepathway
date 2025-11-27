@@ -1,3 +1,12 @@
-DATABASE_URL=sqlite:///./creative_pathways.db
+# Supabase PostgreSQL Connection String
+DATABASE_URL=postgresql://postgres.dvfltcfyujnrxeitosxd:YOUR_PASSWORD@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+
+# CORS Origins (update with your Vercel domain)
 BACKEND_CORS_ORIGINS=["https://creativepathway.vercel.app"]
+
+# Debug mode
 DEBUG=False
+
+# Supabase API Key (for reference, not used by backend)
+SUPABASE_URL=https://dvfltcfyujnrxeitosxd.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR2Zmx0Y2Z5dWpucnhlaXRvc3hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxOTY3OTUsImV4cCI6MjA3OTc3Mjc5NX0.-G5-R6dvzz_WbFsWLNxUWNAC2Tot94OemIh5fo1_lZ0
