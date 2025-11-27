@@ -1,3 +1,4 @@
+```json
 {
     "version": 2,
     "builds": [
@@ -22,9 +23,6 @@
             "src": "/(.*)",
             "dest": "frontend/$1"
         }
-    ],
-    "env": {
-        "DATABASE_URL": "@database_url",
-        "BACKEND_CORS_ORIGINS": "[\"https://creativepathway.vercel.app\"]"
-    }
+    ]
 }
+```
