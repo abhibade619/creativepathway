@@ -1,9 +1,14 @@
+import sys
+import os
+
+# Add current directory to sys.path to ensure imports work on Vercel
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import engine, Base, SessionLocal
-from .routes import artists, matching, roadmap
-from .models import Artist, CareerEvent
-import os
+from database import engine, Base, SessionLocal
+from routes import artists, matching, roadmap
+from models import Artist, CareerEvent
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -24,10 +29,10 @@ async def startup_event():
         if artist_count == 0:
             print("🌱 Database is empty, seeding with all artists...")
             # First seed the initial 5 artists
-            from .seed_data import seed_database
+            from seed_data import seed_database
             seed_database()
             # Then expand with 40+ more artists
-            from .expand_database import expand_database
+            from expand_database import expand_database
             expand_database()
             final_count = db.query(Artist).count()
             event_count = db.query(CareerEvent).count()
